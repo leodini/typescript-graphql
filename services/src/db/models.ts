@@ -1,4 +1,12 @@
-import { Table, DataType, Column, Model, HasMany, ForeignKey, BelongsTo } from "sequelize-typescript";
+import {
+  Table,
+  DataType,
+  Column,
+  Model,
+  HasMany,
+  ForeignKey,
+  BelongsTo,
+} from "sequelize-typescript";
 
 @Table({
   defaultScope: {
@@ -7,7 +15,6 @@ import { Table, DataType, Column, Model, HasMany, ForeignKey, BelongsTo } from "
   paranoid: true,
   tableName: "chefs",
 })
-
 export class Chef extends Model<Chef> {
   @Column({
     allowNull: false,
@@ -27,37 +34,37 @@ export class Chef extends Model<Chef> {
   restaurants!: Restaurant[];
 }
 
-
 @Table({
-    defaultScope: {
-        attributes: { exclude: ["deletedAt"] },
-      },
-      paranoid: true,
-      tableName: "restaurants",
+  defaultScope: {
+    attributes: { exclude: ["deletedAt"] },
+  },
+  paranoid: true,
+  tableName: "restaurants",
 })
+export class Restaurant extends Model<Restaurant> {
+  @Column({
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: DataType.INTEGER.UNSIGNED,
+  })
+  id!: string;
 
-export class Restaurant extends Model<Restaurant>{
-    @Column({
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataType.INTEGER.UNSIGNED,
-      })
-      id!: string;
+  @Column({
+    allowNull: false,
+    type: DataType.INTEGER.UNSIGNED,
+  })
+  @ForeignKey(() => Chef)
+  chefId!: string;
 
-      @Column({
-        allowNull: false,
-        type: DataType.INTEGER.UNSIGNED,
-      })
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+  })
+  name!: string;
 
-      @ForeignKey(() => Chef)
-      chefId!: string;
-
-      @Column({
-          allowNull: false, 
-          type: DataType.STRING
-      })
-      name!: string
-
-      @BelongsTo(() => Chef)
+  @BelongsTo(() => Chef)
+  chef!: Chef;
 }
+
+export default [Chef, Restaurant];
